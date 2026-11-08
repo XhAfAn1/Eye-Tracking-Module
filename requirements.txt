@@ -1,8 +1,5 @@
-# EyeTracker Module — Requirements
-# Install with:  pip install -r requirements.txt
+# Eye Tracking Module — Side-by-Side Comparison Requirements
+# Install with: pip install -r requirements.txt
 
 numpy>=2.1
 opencv-python>=4.8
-matplotlib
-pywin32
-

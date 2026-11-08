@@ -1,0 +1,14 @@
+# Python Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest / Virtualenv
+.pytest_cache/
+env/
+venv/
+.venv/
+
+# OS artifacts
+.DS_Store
+Thumbs.db

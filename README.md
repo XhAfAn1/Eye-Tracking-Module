@@ -1,93 +1,96 @@
-# Eye Tracking Module
+# Eye Tracking Module — 4-Algorithm Comprehensive Benchmark Suite
 
-**Part of the Augmentative Communication System for Plegia**
-
-This repository contains the **Eye Tracking Module**, a prototype designed to empower individuals with plegia or severe motor disabilities by allowing them to control their computer cursor entirely through eye movements.
-
-**Links:**
-*   **[Demonstration Video](https://youtu.be/CbakwJABteQ)**
-*   **[Project Presentation](https://canva.link/cap-b)**
-
-## Key Features
-
-*   **Two-Level Calibration System**:
-    *   **Level 1 (Precision Calibration)**: Fully automatic 9-point initial calibration with a 4-second Lissajous warm-up animation and auto-dwell tracking (2-second approach ring and 1.5-second countdown arc). No manual keypresses required.
-    *   **Level 2 (Fine-Tuning)**: A secondary precision fine-tuning pass (`Ctrl+T` or menu option) to refine the initial calibration mapping for maximum cursor accuracy.
-    *   **Advanced Mathematics**: Uses **Bivariate Degree-2 Polynomial Regression** for highly accurate eye-to-screen mapping (significantly improved over standard affine transformations).
-    *   **Quality Control**: Tukey IQR outlier rejection per point to ensure stable readings, complete with real-time quality flash indicators (green/amber) and a 4-point validation pass with pixel-error reporting.
-*   **Robust Pupil Detection**: Integrates the exact, unchanged Orlosky pupil detection algorithm for bit-for-bit identical accuracy in varied lighting conditions.
-*   **Advanced Cursor Control**:
-    *   Direct Windows cursor manipulation using `ctypes` (no external libraries needed).
-    *   Exponential smoothing for fluid cursor movement.
-    *   **Blink Grace Period**: Temporarily pauses cursor updates during natural blinking to prevent erratic jumps.
-*   **Premium Control Panel (`launcher.py`)**:
-    *   A sleek, dark-themed Tkinter launcher with a comprehensive menu bar.
-    *   Status panel with color-coded health indicators for camera, calibration, and cursor-control.
-    *   Profile management: Save, rename, delete, and view calibration data.
+An empirical, interactive benchmark suite comparing **4 state-of-the-art pupil detection algorithms** on a live camera stream with eyeball boundary caging, multi-algorithm bivariate polynomial calibration, interactive level-2 pointer testing, dynamic smooth pursuit tracking, and automated clinical reporting.
 
 ---
 
-## Hardware Specifications
+## The 4 Algorithms Evaluated
 
-The system utilizes the following custom hardware setup for robust and high-speed pupil tracking:
-
-*   **Camera Module**: `GC0308 0.3MP 120FPS Mini Camera Module`. A high-framerate, lightweight miniature camera that captures real-time footage of the eye with minimal latency.
-*   **Mounting**: **Custom Eye-Tracking Frame**. A specialized, wearable eyeglass frame fitted with an adjustable mount that positions the GC0308 camera module closely to the user's eye.
-
-![Hardware Components](assets/Components.png)
+1. 🟡 **Orlosky Pupil Detector (Gold):** Darkest-point seed + multi-threshold contour extraction.
+2. 🟢 **Pupil Labs Detector2D (Neon Green):** Contrast-adaptive Canny edge filtering + Ramanujan ellipse fitting.
+3. 🔵 **Hybrid Fusion Detector (Cyan):** Pupil Labs primary with spatially-bounded adaptive fallback.
+4. 🟣 **PuReST Tracker (Electric Pink):** World Champion on LPW Benchmark (Santini et al., CVIU/ETRA).
 
 ---
 
-## Software Architecture
+## The 5-Phase Benchmark Workflow
 
-The module is modularly designed with the following core components:
-
-*   **`launcher.py`**: The main entry point. Provides the GUI control panel to manage settings, calibrations, and launch the eye tracker.
-*   **`gaze_mouse.py`**: The core controller that links pupil detection, the calibration engine, and Windows cursor movement. 
-*   **`calibration_engine.py`**: Handles the mathematics, outlier rejection, and polynomial regression for accurate eye-to-screen coordinate mapping.
-*   **`calibration_overlay.py`**: Renders the visual overlay (Lissajous curves, countdown arcs) used during the 9-point calibration process.
-*   **`OrloskyPupilDetector.py`**: The core computer vision pipeline for isolating and detecting the darkest area (pupil) in the frame.
-*   **`settings_window.py`**: A Tkinter-based interface for adjusting system parameters (DPI, gain, smoothing alpha, blink grace period, etc.).
-*   **`gaze_controller.py`**: Manages higher-level gaze interactions and state.
-
----
-
-## Installation & Setup
-
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-name>
-   cd <repository-name>
-   ```
-
-2. **Install the required dependencies:**
-   It is recommended to use a Python virtual environment.
-   ```bash
-   pip install -r requirements.txt
-   ```
-   *Dependencies include: `numpy>=2.1`, `opencv-python>=4.8`, `matplotlib`, `pywin32`.*
-
----
-
-## Usage Instructions
-
-### Starting the System
-Launch the main control panel by running:
-```bash
-python launcher.py
 ```
-From the control panel, you can start cursor control, manage calibration profiles, and adjust settings.
+[Phase 0: Interactive Alignment]
+   │  Adjust Eyeball Boundary Circle on live eye (W/A/S/D, +/-)
+   │  Verify all 4 algorithms are locked -> Press [SPACE]
+   ▼
+[Phase 1: 100% Replicated Precision Calibration]
+   │  Lissajous Warmup (4.0s) with glowing animated aura
+   │  9-Point Screen Grid with Approach Ring, 360° sweeping cyan arc & quality flash
+   │  8 Smooth Pursuit continuous tracking paths (Top, Mid, Bot, Diagonals)
+   │  Simultaneously fits 4 independent Bivariate Degree-2 Polynomials on hundreds of points
+   │  4-Point Validation pass measuring real-world accuracy
+   │  Summary screen showing point quality and validation error
+   ▼
+[Phase 2: Level 2 Testing (Static Targets)]
+   │  Validation targets appear across screen
+   │  Inspect 4 live colored pointers (Gold, Green, Cyan, Pink)
+   │  Fixate on target dot -> Press [SPACE] to Confirm
+   ▼
+[Phase 3: Dynamic Pursuit Tracking Test]
+   │  Smooth pursuit moving dot traverses horizontal, vertical & diagonal paths
+   │  Records real-time trajectory fidelity, tracking lag, and jitter
+   ▼
+[Phase 4 & 5: Analytics & Reporting]
+   │  Generates 6-panel Matplotlib graphic: benchmark_results_charts.png
+   │  Generates detailed clinical report: BENCHMARK_REPORT.md
+   │  Exports complete telemetry data: benchmark_data_TIMESTAMP.json
+   ▼
+[In-App Results Podium & Telemetry Dashboard]
+```
 
-### In-App Keyboard Controls
-When the Eye Tracking Module is running, the following hotkeys are available:
-*   `c` - Start Level 1 precision calibration (fully automatic — just follow the dot)
-*   `t` - Start Level 2 fine-tuning calibration
-*   `r` - Reset calibration
-*   `d` - Toggle debug overlay (shows pupil detection and metrics)
-*   `s` - Open settings window
-*   `-` / `+` - Decrease / Increase cursor gain (speed)
-*   `[` / `]` - Increase / Decrease smoothing (alpha)
-*   `q` - Quit the application
+---
 
-### Calibration Profiles
-Profiles are automatically saved in the `data/` directory as JSON files (e.g., `data/default.json`). You can manage these profiles directly from the "Calibration" menu in the Launcher.
+## Quick Start
+
+Open terminal in this directory:
+```powershell
+cd "E:\Files and Other Things\Projects\Augmentative Communication System for Plegia\Eye Tracking Module - Benchmark Suite"
+python benchmark.py
+```
+
+*Optional command line flags:*
+```powershell
+# Specify a camera index manually
+python benchmark.py -c 1
+
+# Run in a 1280x800 window instead of full-screen
+python benchmark.py --windowed
+```
+
+---
+
+## Controls Summary
+
+| State | Keys | Action |
+| :--- | :--- | :--- |
+| **Phase 0: Alignment** | **`[W] / [A] / [S] / [D]`** or **Arrows** | Move circle cage (Up / Left / Down / Right) |
+| | **`[+]` / `[-]`** | Resize circle radius |
+| | **`[C]`** | Switch active camera device |
+| | **`[Space]`** or **`[Enter]`** | **Start Benchmark** (proceeds to Phase 1) |
+| **Phase 1: Calibration** | Look at shrinking circle & sweeping arc | Hands-free automated 9-point collection |
+| **Phase 2: Static Testing**| **Look at Target Dot** | Inspect the 4 colored pointers in real time |
+| | **`[Space]`** or **`[Enter]`** | **Confirm Fixation** & advance to next test point |
+| **Phase 3: Dynamic Tracking**| **Follow moving dot** | Smooth pursuit continuous recording |
+| **Phase 4: Results** | **`[R]`** | Re-run benchmark |
+| | **`[Q]`** or **`ESC`** | Quit application |
+
+---
+
+## Generated Benchmark Deliverables
+
+1. **`BENCHMARK_REPORT.md`**: Complete clinical comparison with rankings, accuracy tables, jitter metrics, and AAC communication suitability scores.
+2. **`benchmark_results_charts.png`**: High-resolution 300 DPI 6-panel infographic:
+   * *Panel 1:* Mean & 95th Percentile Gaze Error Bar Chart (px and visual degrees °).
+   * *Panel 2:* 2D Target Landing Scatter Plot showing prediction clouds and error confidence ellipses.
+   * *Panel 3:* Fixation Jitter / Stability Boxplot (showing dispersion & tremor).
+   * *Panel 4:* Dynamic Smooth Pursuit Trajectory Overlay (target path vs 4 tracked paths).
+   * *Panel 5:* Latency Distribution KDE with 30 FPS / 60 FPS frame budgets.
+   * *Panel 6:* 5-Axis AAC Usability Radar / Spider Chart.
+3. **`benchmark_data_TIMESTAMP.json`**: Complete raw frame-by-frame telemetry data for archival and research analysis.
